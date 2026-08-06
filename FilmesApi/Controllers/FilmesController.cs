@@ -1,5 +1,6 @@
 ﻿using FilmesApi.Models;
 using Microsoft.AspNetCore.Mvc;
+using System.Collections;
 using static System.Net.WebRequestMethods;
 
 namespace FilmesApi.Controllers;
@@ -11,10 +12,24 @@ public class FilmeController : Controller
 {
 
     private static List<Filme> filmes = new List<Filme>();
+    private static int id = 0;
 
     [HttpPost]
     public void AdicionarFilme([FromBody] Filme filme)
     {
+        filme.Id = id++;
         filmes.Add(filme);
+    }
+
+    [HttpGet]
+    public IEnumerable<Filme> VerFilmes([FromQuery]int skip = 0, [FromQuery] int take = 50)
+    {
+        return filmes.Skip(skip).Take(take);
+    }
+
+    [HttpGet("{id}")]
+    public Filme? VerPorIdFilmes(int id)
+    {
+        return filmes.FirstOrDefault(f => f.Id == id);
     }
 }
