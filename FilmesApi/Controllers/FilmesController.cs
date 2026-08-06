@@ -22,14 +22,22 @@ public class FilmeController : Controller
     }
 
     [HttpGet]
-    public IEnumerable<Filme> VerFilmes([FromQuery]int skip = 0, [FromQuery] int take = 50)
+    public IEnumerable<Filme> VerFilmes([FromQuery]int skip = 0,
+        [FromQuery] int take = 50)
     {
         return filmes.Skip(skip).Take(take);
     }
 
     [HttpGet("{id}")]
-    public Filme? VerPorIdFilmes(int id)
+    public IActionResult VerPorIdFilmes(int id)
     {
-        return filmes.FirstOrDefault(f => f.Id == id);
+        var filme = filmes.FirstOrDefault(f => f.Id == id);
+
+        if (filme == null)
+        {
+            return NotFound();
+
+        }
+        return Ok(filme);
     }
 }
