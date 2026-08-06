@@ -15,10 +15,14 @@ public class FilmeController : Controller
     private static int id = 0;
 
     [HttpPost]
-    public void AdicionarFilme([FromBody] Filme filme)
+    public IActionResult AdicionarFilme([FromBody] Filme filme)
     {
         filme.Id = id++;
         filmes.Add(filme);
+      
+        return CreatedAtAction(nameof(VerPorIdFilmes),
+            new {id = filme.Id},
+            filme);
     }
 
     [HttpGet]
