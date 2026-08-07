@@ -1,41 +1,44 @@
-﻿using FilmesApi.Models;
+﻿using FilmesApi.Data;
+using FilmesApi.Models;
 using Microsoft.AspNetCore.Mvc;
-using System.Collections;
-using static System.Net.WebRequestMethods;
 
 namespace FilmesApi.Controllers;
 
 
 [ApiController]
 [Route("[controller]")]
-public class FilmeController : Controller
+public class FilmesController : Controller
 {
 
-    private static List<Filme> filmes = new List<Filme>();
-    private static int id = 0;
+    private FilmeContext context;
+
+    public FilmesController(FilmeContext context)
+    {
+        this.context = context;
+    }
 
     [HttpPost]
     public IActionResult AdicionarFilme([FromBody] Filme filme)
     {
-        filme.Id = id++;
-        filmes.Add(filme);
-      
+
+        context.Filmes.Add(filme);
+        context.SaveChanges();
         return CreatedAtAction(nameof(VerPorIdFilmes),
             new {id = filme.Id},
             filme);
     }
 
     [HttpGet]
-    public IEnumerable<Filme> VerFilmes([FromQuery]int skip = 0,
+    public List<Filme> VerFilmes([FromQuery]int skip = 0,
         [FromQuery] int take = 50)
     {
-        return filmes.Skip(skip).Take(take);
+        return context.Filmes.Skip(skip).Take(take).ToList();
     }
 
     [HttpGet("{id}")]
     public IActionResult VerPorIdFilmes(int id)
     {
-        var filme = filmes.FirstOrDefault(f => f.Id == id);
+        var filme = context.Filmes.FirstOrDefault(f => f.Id == id);
 
         if (filme == null)
         {
