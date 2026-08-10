@@ -8,6 +8,8 @@ var connectionString = builder.Configuration.GetConnectionString("FilmeApiConnec
 builder.Services.AddDbContext<FilmeContext>(opts =>
     opts.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString)));
 
+builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+
 builder.Services.AddControllers();
 
 builder.Services.AddEndpointsApiExplorer();
