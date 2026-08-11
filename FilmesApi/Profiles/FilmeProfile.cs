@@ -11,5 +11,11 @@ public class FilmeProfile : Profile
     {
         CreateMap<CreateFilmeDto, Filme>();
         CreateMap<UpdateFilmeDto, Filme>();
+        CreateMap<Filme,UpdateFilmeDto>();
+
+        CreateMap<UpdateFilmeParcialDto, Filme>()
+    .ForAllMembers(opts =>
+        opts.Condition((src, dest, srcMember) => srcMember != null));
+        //"Só mapeie a propriedade se o valor recebido não for null."
     }
 }
