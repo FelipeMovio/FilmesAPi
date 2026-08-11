@@ -31,7 +31,7 @@ public class FilmesController : Controller
         context.SaveChanges();
         return CreatedAtAction(nameof(VerPorIdFilmes),
             new {id = filme.Id},
-            filme);
+            filmeDto);
     }
 
     [HttpGet]
