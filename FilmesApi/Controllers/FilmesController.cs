@@ -52,4 +52,20 @@ public class FilmesController : Controller
         }
         return Ok(filme);
     }
+
+    [HttpPut("{id}")]
+    public IActionResult AtualizarFilme(int id, 
+        [FromBody] UpdateFilmeDto UpdatefilmeDto)
+    {
+        var filme = context.Filmes.FirstOrDefault(
+            f => f.Id == id);
+        if (filme == null)
+        {
+            return NotFound();
+        }
+        mapper.Map(UpdatefilmeDto, filme);
+        context.SaveChanges();
+
+        return NoContent();
+    }
 }
