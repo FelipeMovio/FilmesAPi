@@ -17,5 +17,7 @@ public class FilmeProfile : Profile
     .ForAllMembers(opts =>
         opts.Condition((src, dest, srcMember) => srcMember != null));
         //"Só mapeie a propriedade se o valor recebido não for null."
+
+        CreateMap<Filme, ReadFilmeDto>();
     }
 }

@@ -35,10 +35,11 @@ public class FilmesController : Controller
     }
 
     [HttpGet]
-    public List<Filme> VerFilmes([FromQuery]int skip = 0,
+    public IEnumerable<ReadFilmeDto> VerFilmes([FromQuery]int skip = 0,
         [FromQuery] int take = 50)
     {
-        return context.Filmes.Skip(skip).Take(take).ToList();
+        return mapper.Map<List<ReadFilmeDto>>
+            (context.Filmes.Skip(skip).Take(take).ToList());
     }
 
     [HttpGet("{id}")]
@@ -51,7 +52,10 @@ public class FilmesController : Controller
             return NotFound();
 
         }
-        return Ok(filme);
+
+        var filmeDto = mapper.Map<ReadFilmeDto>(filme);
+
+        return Ok(filmeDto);
     }
 
     [HttpPut("{id}")]
