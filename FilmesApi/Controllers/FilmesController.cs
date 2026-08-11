@@ -88,4 +88,21 @@ public class FilmesController : Controller
 
         return NoContent();
     }
+
+
+    [HttpDelete("{id}")]
+
+    public IActionResult DeletaFilme(int id)
+    {
+        var filme = context.Filmes.FirstOrDefault(
+            f => f.Id == id);
+        if (filme == null)
+        {
+            return NotFound();
+        }
+        context.Remove(filme);
+        context.SaveChanges();
+
+        return NoContent();
+    }
 }
