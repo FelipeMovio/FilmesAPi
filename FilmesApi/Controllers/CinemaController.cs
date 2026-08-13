@@ -35,11 +35,24 @@ public class CinemaController : Controller
     }
 
     [HttpGet]
-    public IEnumerable<ReadCinemaDto> RecuperarCinemas([FromQuery] int skip = 0,
-        [FromQuery] int take = 50)
+    public IEnumerable<ReadCinemaDto> RecuperarCinemas([FromQuery] int? enderecoId = null)
     {
+        if (enderecoId == null)
+        {
+            return _mapper.Map<List<ReadCinemaDto>>
+                (_context.Cinemas.ToList());
+        }
+        //return _mapper.Map<List<ReadCinemaDto>>
+        //        (_context.Cinemas
+        //        .Where(cinema => cinema.EnderecoId == enderecoId)
+        //        .ToList());
+
+        //Fazem a mesma coisa so que um por consulta LINQ e outro por consultaSql
+
         return _mapper.Map<List<ReadCinemaDto>>
-            (_context.Cinemas.Skip(skip).Take(take).ToList());
+                (_context.Cinemas.FromSqlRaw
+            ($"SELECT Id,Nome,EnderecoId FROM cinemas where cinemas.EnderecoId = {enderecoId}")
+            .ToList());
     }
 
     [HttpGet("{id}")]
