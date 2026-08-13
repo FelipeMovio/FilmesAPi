@@ -27,7 +27,7 @@ public class SessaoController : Controller
         _context.SaveChanges();
 
         return CreatedAtAction(nameof(RecuperarSessoesPorId),
-    new { id = sessao.Id },
+    new { filmeId = sessao.FilmeId, cinemaId = sessao.CinemaId},
     dto);
     }
 
@@ -39,10 +39,11 @@ public class SessaoController : Controller
             (_context.Cinemas.Skip(skip).Take(take).ToList());
     }
 
-    [HttpGet("{id}")]
-    public IActionResult RecuperarSessoesPorId(int id)
+    [HttpGet("{ifilmeId}/{cinemaId}")]
+    public IActionResult RecuperarSessoesPorId(int filmeId, int cinemaId)
     {
-        Sessao sessao = _context.Sessoes.FirstOrDefault(c => c.Id == id);
+        Sessao sessao = _context.Sessoes.FirstOrDefault(c => 
+        c.FilmeId == filmeId && c.CinemaId == cinemaId);
         if (sessao != null)
         {
             ReadSessaoDto sessaoDto = _mapper.Map<ReadSessaoDto>(sessao);
@@ -51,18 +52,4 @@ public class SessaoController : Controller
         return NotFound();
     }
 
-
-    [HttpDelete("{id}")]
-    public IActionResult DeletaSessao(int id)
-    {
-       Sessao sessao = _context.Sessoes.FirstOrDefault(c => c.Id == id);
-        if (sessao == null)
-        {
-            return NotFound();
-        }
-        _context.Remove(sessao);
-        _context.SaveChanges();
-
-        return NoContent();
-    }
 }
